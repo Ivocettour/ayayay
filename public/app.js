@@ -120,26 +120,32 @@ filterCategory.addEventListener('change', renderGrid);
 searchInput.addEventListener('input', renderGrid);
 
 // ---- Admin Auth ----
-adminBtn.addEventListener('click', ()=>{
-  show(loginModal);
-  loginMsg.textContent = '';
-});
+// ---- Admin Auth ----
+const FIXED_USER = "Nahuel";
+const FIXED_PASS = "45508227";
 
-closeLogin.addEventListener('click', ()=> hide(loginModal));
+loginBtn.addEventListener('click', ()=>{
+  const user = loginEmail.value.trim();
+  const pass = loginPass.value.trim();
 
-loginBtn.addEventListener('click', async ()=>{
-  try{
-    loginMsg.textContent = 'Ingresando...';
-    const email = loginEmail.value.trim() || ADMIN_EMAIL;
-    const pass = loginPass.value.trim();
-    await signInWithEmailAndPassword(auth, email, pass);
-    loginMsg.textContent = 'OK';
+  if (user === FIXED_USER && pass === FIXED_PASS) {
+    loginMsg.textContent = "OK";
     hide(loginModal);
-  }catch(err){
-    console.error(err);
-    loginMsg.textContent = err.message || 'Error de login';
+    show(adminPanel);
+    adminEmailLabel.textContent = user;
+    // cargamos productos locales (si los vas a manejar en memoria)
+    // o igual podés seguir usando Firestore para datos
+    loadProducts();
+  } else {
+    loginMsg.textContent = "Usuario o clave incorrecta";
   }
 });
+
+signOutBtn.addEventListener('click', ()=>{
+  hide(adminPanel);
+  adminEmailLabel.textContent = "";
+});
+
 
 signOutBtn.addEventListener('click', ()=> signOut(auth));
 
